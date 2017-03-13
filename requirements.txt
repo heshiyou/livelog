@@ -1,0 +1,4 @@
+django
+channels
+asgi_redis
+feedparser

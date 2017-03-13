@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Live Log</title>
+
+    <style>
+        body {
+            font-family: Helvetica,Arial,"PingFang SC","Hiragino Sans GB","Source Han Sans CN",Roboto,"Microsoft Yahei",sans-serif;
+        }
+
+        #container {
+            margin: 1em;
+        }
+
+        #container h2 {
+            border-left: 0.25em solid red;
+            padding-left: 0.5em;
+        }
+
+        ul#log {
+            list-style-type: none;
+            -webkit-padding-start: 0;
+        }
+
+        ul#log li {
+            border-bottom: 0.1em dashed;
+        }
+
+        ul#log li p {
+            color: #999;
+            font-size: 0.8em;
+        }
+
+        ul#log li p span {
+            float: right;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="container">
+        <h2>Live Blog</h2>
+        <ul id="log">
+
+        </ul>
+    </div>
+
+    <script type="application/javascript">
+        var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+        var ws = new WebSocket(ws_scheme + '://' + window.location.host + window.location.pathname);
+        console.log(ws);
+        ws.onmessage = function (message) {
+            var data = JSON.parse(message.data);
+            var logList = document.querySelector('#log');
+            var logItem = document.createElement('li');
+
+            var itemTmp = `
+                <h3>${data.title}</h3>
+                <p>
+                    <date>${new Date(data.published).toLocaleString()}</date>
+                    <span>${data.source.title}</span>
+                </p>
+            `;
+            logItem.innerHTML = itemTmp;
+            logList.insertBefore(logItem, logList.firstChild);
+        }
+
+    </script>
+</body>
+</html>
